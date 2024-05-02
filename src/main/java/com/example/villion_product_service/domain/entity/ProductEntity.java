@@ -2,8 +2,8 @@ package com.example.villion_product_service.domain.entity;
 
 import com.example.villion_product_service.domain.eunm.Category;
 import com.example.villion_product_service.domain.eunm.RentalMethod;
+import com.example.villion_product_service.domain.eunm.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -17,11 +17,14 @@ public class ProductEntity {
     private Long productId;
 
     private Category category; // enum
-    private LocalDate rentalPeriod;
+    private Status status; // enum
+    private LocalDate rentalPeriod; // 대여 가능 기간
     private Long rentalPrice;
     private RentalMethod rentalMethod; // enum
     private boolean popularity;
     private String rentalLocation;
     private String description;
+    private Boolean rentable;
+    private Boolean purchasable;
 
 }
