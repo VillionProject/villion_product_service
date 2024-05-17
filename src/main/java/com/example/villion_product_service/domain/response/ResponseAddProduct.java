@@ -1,4 +1,4 @@
-package com.example.villion_product_service.domain.request;
+package com.example.villion_product_service.domain.response;
 
 import com.example.villion_product_service.domain.eunm.ProductStatus;
 import com.example.villion_product_service.domain.eunm.RentalMethod;
@@ -6,26 +6,17 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 @Data
-public class RequestAddProduct {
+public class ResponseAddProduct {
     private Long productId;
 
     private Long bookId;
 
-    private String bookName;
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
-    private LocalTime rentalPeriod;
+    private Date rentalPeriod;
     private Long RentalPrice;
     private RentalMethod rentalMethod;
-    private boolean popularity;  // 인기제품이다 아니다.
-    private String RentalLocation;
-    private String Description;
-    private boolean Rentable;
-    private boolean Purchasable;
-
-
-
 }

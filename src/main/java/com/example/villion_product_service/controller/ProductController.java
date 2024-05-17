@@ -1,13 +1,20 @@
 package com.example.villion_product_service.controller;
 
 import com.example.villion_product_service.domain.request.RequestAddProduct;
+import com.example.villion_product_service.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1/product/")
+@RequiredArgsConstructor
 public class ProductController {
-    @PostMapping("addProduct/{userId}")
-    public void addProduct(@PathVariable("userId") String userId, @RequestBody RequestAddProduct requestAddProduct) {
+    private final ProductService productService;
 
+    @GetMapping
+    public void test () {
+        System.out.println("TEST---------------------------------");
     }
+
+
 }

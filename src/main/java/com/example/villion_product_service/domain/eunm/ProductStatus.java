@@ -1,6 +1,6 @@
 package com.example.villion_product_service.domain.eunm;
 
-public enum Status {
+public enum ProductStatus {
     EXCELLENT, // 최상
     GOOD,      // 상
     ABOVE_AVERAGE, // 중상
