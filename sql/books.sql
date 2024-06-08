@@ -35,7 +35,7 @@ CREATE TABLE books (
 );
 
 
-LOAD DATA INFILE '/var/lib/mysql-files//Aladin_Weekly_Best_Sellers_Domestic_Books.csv'
+LOAD DATA INFILE './Aladin_Weekly_Best_Sellers_Domestic_Books.csv'
 INTO TABLE books
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
