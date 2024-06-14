@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class addRentedDeliveryOrderProducer {
 
-    private final KafkaTemplate<String, AddRentedDeliveryOrderDto2> kafkaTemplate;
+    private final KafkaTemplate<String, AddRentedDeliveryOrderDto> kafkaTemplate;
 
-    public addRentedDeliveryOrderProducer(KafkaTemplate<String, AddRentedDeliveryOrderDto2> kafkaTemplate) {
+    public addRentedDeliveryOrderProducer(KafkaTemplate<String, AddRentedDeliveryOrderDto> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void send(String topic, AddRentedDeliveryOrderDto2 addRentedDeliveryOrderDto) {
+    public void send(String topic, AddRentedDeliveryOrderDto addRentedDeliveryOrderDto) {
 
         kafkaTemplate.send(topic, addRentedDeliveryOrderDto);
         log.info(" data from the Rental microservice:" + addRentedDeliveryOrderDto);

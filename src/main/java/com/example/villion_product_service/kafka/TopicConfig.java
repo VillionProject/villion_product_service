@@ -13,6 +13,7 @@ public class TopicConfig {
     public final static String addRentedDeliveryOrder = "addRentedDeliveryOrder-topic";
     public final static String addRentedDeliveryOrderLast1 = "addRentedDeliveryOrder-topic-last1";
     public final static String addRentedDeliveryOrderLast2 = "addRentedDeliveryOrder-topic-last2";
+    public final static String testTopic = "testTopic";
 
     @Bean
     public NewTopic addProductTopic(){
@@ -54,6 +55,15 @@ public class TopicConfig {
     public NewTopic addRentedDeliveryOrderLast2(){
         return TopicBuilder
                 .name(addRentedDeliveryOrderLast2)
+                .replicas(1)
+                .partitions(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic testTopic(){
+        return TopicBuilder
+                .name(testTopic)
                 .replicas(1)
                 .partitions(1)
                 .build();
