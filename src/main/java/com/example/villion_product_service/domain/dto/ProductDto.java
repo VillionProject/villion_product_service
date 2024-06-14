@@ -15,6 +15,7 @@ public class ProductDto {
         private Long productId;
 
 //    private Long bookId;
+        private Long ownerUserId; // 책주인(대여받는 사람)
 
         private String bookName;
         @Enumerated(EnumType.STRING)
@@ -24,7 +25,6 @@ public class ProductDto {
         @Enumerated(EnumType.STRING)
         private RentalStatus rentalStatus; // 대여 상태
         private Long rentalQuantity;
-        private LocalDate rentalPeriod; // 대여 가능 기간
         private Long rentalPrice;
         @Enumerated(EnumType.STRING)
         private RentalMethod rentalMethod; // enum

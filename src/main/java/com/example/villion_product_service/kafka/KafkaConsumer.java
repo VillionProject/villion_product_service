@@ -26,7 +26,7 @@ public class KafkaConsumer {
 
 
     @KafkaListener(topics = TopicConfig.addProduct, groupId = "group_2")
-    public void consumeMixResult(ProductDto productDto) {
+    public void addProductResult(ProductDto productDto) {
         System.out.println(productDto);
         ModelMapper mapper = new ModelMapper();
         ProductEntity productEntity = mapper.map(productDto, ProductEntity.class);

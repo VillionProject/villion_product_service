@@ -17,6 +17,8 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
+    private Long ownerUserId;
+
     private String bookName;
     @Enumerated(EnumType.STRING)
     private Category category; // enum
@@ -25,7 +27,7 @@ public class ProductEntity {
     @Enumerated(EnumType.STRING)
     private RentalStatus rentalStatus; // 대여 상태
     private Long rentalQuantity;
-    private LocalDate rentalPeriod; // 대여 가능 기간
+//    private LocalDate rentalPeriod; // 대여 가능 기간
     private Long rentalPrice;
     @Enumerated(EnumType.STRING)
     private RentalMethod rentalMethod; // enum
@@ -35,6 +37,6 @@ public class ProductEntity {
     private Boolean rentable;
     private Boolean purchasable;
 
-    private Long userId;
+
 
 }
