@@ -27,8 +27,8 @@ public class AddRentedDeliveryOrderDto {
 //    private Long phoneNumber;
 //    private String address;
 //    private String deliveryMemo;
-    private LocalDate rentalStartDate; //  대여시작일
-    private LocalDate rentalEndDate; // 대여마감일
+    private LocalDate rentalStartDate; //  대여 시작일
+    private LocalDate rentalEndDate; // 대여 종료일
     private Long totalRentalQuantity;
 //    private Long shippingCost;
     private Long totalRentalPrice;
