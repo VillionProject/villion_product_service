@@ -48,12 +48,18 @@ public class DeliveryOrderConsumer {
                 // 재고량 업데이트
                 // 등록된 상품 재고량도 주문량만큼 -되고 "저장"이되어야 함..
                 byProductId.setStockQuantity(resultStock);
-                byProductId.setRentalStatus(RentalStatus.RENTED); // 대여완료로 변경 TODO 등록 수량이 0되면 바뀌어야 하나..?
+
+                // 재고량이 0이면 UNAVAILABLE, 남아있으면 AVAILABLE, 하지만 rental-service 넘어가는건 RENTED
+                if(resultStock == 0) {
+                    byProductId.setRentalStatus(RentalStatus.UNAVAILABLE); // 대여완료로 변경
+                } else {
+                    byProductId.setRentalStatus(RentalStatus.AVAILABLE);
+                }
                 productRepository.save(byProductId);
-                // TODO 재고량이 0이면 UNAVAILABLE, 남아있으면 AVAILABLE, 하지만 rental-service 넘어가는건 RENTED
 
 
-                // 대여원장으로 넘겨줌
+
+                // rental-service : 대여원장으로 넘겨줌
                 AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
                         .productId(byProductId.getProductId())
                         .ownerUserId(byProductId.getOwnerUserId())
@@ -69,7 +75,7 @@ public class DeliveryOrderConsumer {
                         .bookName(byProductId.getBookName())
                         .category(byProductId.getCategory())
                         .productStatus(byProductId.getProductStatus())
-                        .rentalStatus(byProductId.getRentalStatus())
+                        .rentalStatus(RentalStatus.RENTED)
                         .rentalPrice(byProductId.getRentalPrice())
                         .rentalMethod(byProductId.getRentalMethod())
                         .rentalLocation(byProductId.getRentalLocation())
