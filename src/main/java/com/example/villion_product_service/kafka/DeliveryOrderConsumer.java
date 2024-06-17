@@ -3,6 +3,7 @@ package com.example.villion_product_service.kafka;
 import com.example.villion_product_service.domain.dto.AddDeliveryOrderDto;
 import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto;
 import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto2;
+import com.example.villion_product_service.domain.dto.OrderDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.RentalStatus;
 import com.example.villion_product_service.repository.ProductCountRepository;
@@ -26,74 +27,61 @@ public class DeliveryOrderConsumer {
     @KafkaListener(topics = TopicConfig.addDeliveryOrder)
     public void addDeliveryOrderResult(AddDeliveryOrderDto addDeliveryOrderDto) {
 
-//        AddRentedDeliveryOrderDto2 build = new AddRentedDeliveryOrderDto2(1L, 2L);
-//
-//        System.out.println("유저에서 잘옴 ");
-//        System.out.println(addDeliveryOrderDto);
-//
-//        addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrderLast2, build);
+        for (OrderDto orderDto : addDeliveryOrderDto.getOrderList()) {
 
-        for (ProductEntity productEntity : addDeliveryOrderDto.getOrderList()) {
-
-            Long productId = productEntity.getProductId();
+            Long productId = orderDto.getProductId();
             ProductEntity byProductId = productRepository.findByProductId(productId);
-            byProductId.setRentalStatus(RentalStatus.RENTED); // 대여완료로 변경 TODO 등록 수량이 0되면 바뀌어야 하나..?
-            productRepository.save(byProductId);
-
-            // RentalStatus.RENTED로 바뀌면 AddDeliveryOrderDto 주문정보 + ownerUserId 책주인(대여받는 사람)데이터를 가지고 rental-service에 저장
-//            ModelMapper mapper = new ModelMapper();
-//            mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-//            AddRentedDeliveryOrderDto map = mapper.map(byProductId, AddRentedDeliveryOrderDto.class);
-//            map.setOwnerUserId(byProductId.getOwnerUserId());
-//            map.setRenterUserId(addDeliveryOrderDto.getRenterUserId());
-
-            AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
-                    .productId(byProductId.getProductId())
-                    .ownerUserId(byProductId.getOwnerUserId())
-
-                    .renterUserId(addDeliveryOrderDto.getRenterUserId())
-                    .rentalStartDate(addDeliveryOrderDto.getRentalStartDate())
-                    .rentalEndDate(addDeliveryOrderDto.getRentalEndDate())
-                    .totalRentalQuantity(addDeliveryOrderDto.getTotalRentalQuantity())
-                    .totalRentalPrice(addDeliveryOrderDto.getTotalRentalPrice())
-                    .orderList(addDeliveryOrderDto.getOrderList())
-                    .paymentMethod(addDeliveryOrderDto.getPaymentMethod())
-
-                    .bookName(byProductId.getBookName())
-                    .category(byProductId.getCategory())
-                    .productStatus(byProductId.getProductStatus())
-                    .rentalStatus(byProductId.getRentalStatus())
-                    .rentalPrice(byProductId.getRentalPrice())
-                    .rentalMethod(byProductId.getRentalMethod())
-                    .rentalLocation(byProductId.getRentalLocation())
-                    .build();
-
-            addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, build);
-//            addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, map);
-
 
             // 주문량이 재고량 못 넘어가게 제한
-            Long currentStock = byProductId.getRentalQuantity(); // 현재 재고량
-            Long orderedQuantity = productEntity.getRentalQuantity();
-            long resultStock = byProductId.getRentalQuantity() - orderedQuantity;
-            // 주문 수량이 재고량을 초과하는지 확인
-            if (orderedQuantity > currentStock) {
+            Long currentStock = byProductId.getStockQuantity(); // 현재 재고량
+            Long orderedQuantity = orderDto.getQuantity(); // 주문량
+            Long resultStock = currentStock - orderedQuantity; // 현재 재고량 - 주문량
+
+            // 주문 수량 초기화
+            productCountRepository.resetOrderCount(String.valueOf(productId));
+
+            // 주문량 증가 및 결과 확인
+            Long orderCount = productCountRepository.increment(String.valueOf(productId), orderedQuantity);
+
+            // orderCount가 몇까지 증가했는지 확인
+            if (orderCount != null && orderCount <= currentStock) {
+                // 재고량 업데이트
+                // 등록된 상품 재고량도 주문량만큼 -되고 "저장"이되어야 함..
+                byProductId.setStockQuantity(resultStock);
+                byProductId.setRentalStatus(RentalStatus.RENTED); // 대여완료로 변경 TODO 등록 수량이 0되면 바뀌어야 하나..?
+                productRepository.save(byProductId);
+                // TODO 재고량이 0이면 UNAVAILABLE, 남아있으면 AVAILABLE, 하지만 rental-service 넘어가는건 RENTED
+
+
+                // 대여원장으로 넘겨줌
+                AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
+                        .productId(byProductId.getProductId())
+                        .ownerUserId(byProductId.getOwnerUserId())
+
+                        .renterUserId(addDeliveryOrderDto.getRenterUserId())
+                        .rentalStartDate(addDeliveryOrderDto.getRentalStartDate())
+                        .rentalEndDate(addDeliveryOrderDto.getRentalEndDate())
+                        .totalRentalQuantity(addDeliveryOrderDto.getTotalRentalQuantity()) // TODO 주문내역에서 상품별 수량*금액 더해서 보여주기
+                        .totalRentalPrice(addDeliveryOrderDto.getTotalRentalPrice())
+                        .orderList(addDeliveryOrderDto.getOrderList())
+                        .paymentMethod(addDeliveryOrderDto.getPaymentMethod())
+
+                        .bookName(byProductId.getBookName())
+                        .category(byProductId.getCategory())
+                        .productStatus(byProductId.getProductStatus())
+                        .rentalStatus(byProductId.getRentalStatus())
+                        .rentalPrice(byProductId.getRentalPrice())
+                        .rentalMethod(byProductId.getRentalMethod())
+                        .rentalLocation(byProductId.getRentalLocation())
+                        .build();
+
+                addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, build);
+//            addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, map);
+
+            } else {
                 log.error("Ordered quantity exceeds available stock for productId: " + productId);
-                // Handle the error appropriately, e.g., send a message to a Kafka error topic
-                // or throw an exception
-                continue;  // Skip this product and continue with the next
             }
 
-
-            // 재고량 설정
-            productCountRepository.setOrderCount(String.valueOf(addDeliveryOrderDto.getProductId()), resultStock);
-            // TODO 만약 제한수 넘어가면 어떻게 나옴? 에러뜨나
-
-            // TODO 등록된 상품 재고량도 주문량만큼 -되고 "저장"이되어야 함..
-            byProductId.setRentalQuantity(resultStock);
-            
-            // 주문량 +1
-            productCountRepository.increment(String.valueOf(addDeliveryOrderDto.getProductId()));
         }
 
     }

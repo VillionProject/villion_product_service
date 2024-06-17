@@ -24,7 +24,7 @@ public class ProductDto {
         private ProductStatus productStatus; // enum
         @Enumerated(EnumType.STRING)
         private RentalStatus rentalStatus; // 대여 상태
-        private Long rentalQuantity;
+        private Long stockQuantity;
         private Long rentalPrice;
         @Enumerated(EnumType.STRING)
         private RentalMethod rentalMethod; // enum

@@ -33,7 +33,7 @@ public class AddRentedDeliveryOrderDto {
 //    private Long shippingCost;
     private Long totalRentalPrice;
 //    private Long usedPoints;
-    private List<ProductEntity> orderList; // 주문 내역은 화면에서 받아서 보여주기
+    private List<OrderDto> orderList; // 주문 내역은 화면에서 받아서 보여주기
 
 
     // 결제 내역 정보

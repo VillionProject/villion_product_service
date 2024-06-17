@@ -26,7 +26,7 @@ public class ProductEntity {
     private ProductStatus productStatus; // enum
     @Enumerated(EnumType.STRING)
     private RentalStatus rentalStatus; // 대여 상태
-    private Long rentalQuantity;
+    private Long stockQuantity;
 //    private LocalDate rentalPeriod; // 대여 가능 기간
     private Long rentalPrice;
     @Enumerated(EnumType.STRING)
