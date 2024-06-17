@@ -35,7 +35,7 @@ public class DeliveryOrderConsumer {
             // 주문량이 재고량 못 넘어가게 제한
             Long currentStock = byProductId.getStockQuantity(); // 현재 재고량
             Long orderedQuantity = orderDto.getQuantity(); // 주문량
-            Long resultStock = currentStock - orderedQuantity; // 현재 재고량 - 주문량
+            long resultStock = currentStock - orderedQuantity; // 현재 재고량 - 주문량
 
             // 주문 수량 초기화
             productCountRepository.resetOrderCount(String.valueOf(productId));
@@ -57,7 +57,15 @@ public class DeliveryOrderConsumer {
                 }
                 productRepository.save(byProductId);
 
+                // 총 주문 수량 누적
+                long totalQuantity = 0L; // 초기화
+                totalQuantity += orderedQuantity; // 누적 수량
 
+                // 총 금액  = 주문 수량 * 가격
+                long totalPrice = 0L; // 초기화
+                totalPrice += orderedQuantity * byProductId.getRentalPrice();
+
+                // TODO 사용한 point는 빼야함..
 
                 // rental-service : 대여원장으로 넘겨줌
                 AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
@@ -67,8 +75,8 @@ public class DeliveryOrderConsumer {
                         .renterUserId(addDeliveryOrderDto.getRenterUserId())
                         .rentalStartDate(addDeliveryOrderDto.getRentalStartDate())
                         .rentalEndDate(addDeliveryOrderDto.getRentalEndDate())
-                        .totalRentalQuantity(addDeliveryOrderDto.getTotalRentalQuantity()) // TODO 주문내역에서 상품별 수량*금액 더해서 보여주기
-                        .totalRentalPrice(addDeliveryOrderDto.getTotalRentalPrice())
+                        .totalRentalQuantity(totalQuantity) // TODO 주문내역에서 상품별 수량*금액 더해서 보여주기
+                        .totalRentalPrice(totalPrice-addDeliveryOrderDto.getUsedPoints() + addDeliveryOrderDto.getShippingCost())
                         .orderList(addDeliveryOrderDto.getOrderList())
                         .paymentMethod(addDeliveryOrderDto.getPaymentMethod())
 
@@ -87,7 +95,6 @@ public class DeliveryOrderConsumer {
             } else {
                 log.error("Ordered quantity exceeds available stock for productId: " + productId);
             }
-
         }
 
     }

@@ -24,9 +24,9 @@ public class AddDeliveryOrderDto {
     private String deliveryMemo;
     private LocalDate rentalStartDate; //  대여시작일
     private LocalDate rentalEndDate; // 대여마감일
-    private Long totalRentalQuantity;
+//    private Long totalRentalQuantity;
     private Long shippingCost;
-    private Long totalRentalPrice;
+//    private Long totalRentalPrice;
     private Long usedPoints;
     private List<OrderDto> orderList; // 주문 내역은 화면에서 받아서 보여주기
 
