@@ -1,6 +1,5 @@
 package com.example.villion_product_service.domain.dto;
 
-import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -15,6 +15,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +28,10 @@ public class DeliveryOrderConsumer {
 
     @KafkaListener(topics = TopicConfig.addDeliveryOrder)
     public void addDeliveryOrderResult(AddDeliveryOrderDto addDeliveryOrderDto) {
+        // TODO rental-service에서 빌려진 내역을 어떻게 보여줄 것인지 고민이 필요함.. 제품별로 보여줄 것인지? 아니연 하나 주문내역을 보여줄 것인지?
+        // 후자가 좋아보이긴 함.. 고민 필요
+
+
 
         for (OrderDto orderDto : addDeliveryOrderDto.getOrderList()) {
 
@@ -44,7 +50,7 @@ public class DeliveryOrderConsumer {
             Long orderCount = productCountRepository.increment(String.valueOf(productId), orderedQuantity);
 
             // orderCount가 몇까지 증가했는지 확인
-            if (orderCount != null && orderCount <= currentStock) {
+            if (orderCount != null && orderCount <= currentStock && currentStock != 0) {
                 // 재고량 업데이트
                 // 등록된 상품 재고량도 주문량만큼 -되고 "저장"이되어야 함..
                 byProductId.setStockQuantity(resultStock);
@@ -58,14 +64,13 @@ public class DeliveryOrderConsumer {
                 productRepository.save(byProductId);
 
                 // 총 주문 수량 누적
-                long totalQuantity = 0L; // 초기화
-                totalQuantity += orderedQuantity; // 누적 수량
+//                long totalQuantity = 0L; // 초기화
+//                totalQuantity += orderedQuantity; // 누적 수량
+//
+//                // 총 금액  = 주문 수량 * 가격
+//                long totalPrice = 0L; // 초기화
+//                totalPrice += orderedQuantity * byProductId.getRentalPrice();
 
-                // 총 금액  = 주문 수량 * 가격
-                long totalPrice = 0L; // 초기화
-                totalPrice += orderedQuantity * byProductId.getRentalPrice();
-
-                // TODO 사용한 point는 빼야함..
 
                 // rental-service : 대여원장으로 넘겨줌
                 AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
@@ -75,18 +80,20 @@ public class DeliveryOrderConsumer {
                         .renterUserId(addDeliveryOrderDto.getRenterUserId())
                         .rentalStartDate(addDeliveryOrderDto.getRentalStartDate())
                         .rentalEndDate(addDeliveryOrderDto.getRentalEndDate())
-                        .totalRentalQuantity(totalQuantity) // TODO 주문내역에서 상품별 수량*금액 더해서 보여주기
-                        .totalRentalPrice(totalPrice-addDeliveryOrderDto.getUsedPoints() + addDeliveryOrderDto.getShippingCost())
-                        .orderList(addDeliveryOrderDto.getOrderList())
+//                        .totalRentalQuantity(totalQuantity)
+//                        .totalRentalPrice(totalPrice-addDeliveryOrderDto.getUsedPoints() + addDeliveryOrderDto.getShippingCost())
+//                        .orderList(addDeliveryOrderDto.getOrderList())
                         .paymentMethod(addDeliveryOrderDto.getPaymentMethod())
 
                         .bookName(byProductId.getBookName())
                         .category(byProductId.getCategory())
                         .productStatus(byProductId.getProductStatus())
                         .rentalStatus(RentalStatus.RENTED)
+                        .rentalQuantity(orderDto.getQuantity())
                         .rentalPrice(byProductId.getRentalPrice())
                         .rentalMethod(byProductId.getRentalMethod())
                         .rentalLocation(byProductId.getRentalLocation())
+
                         .build();
 
                 addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, build);
