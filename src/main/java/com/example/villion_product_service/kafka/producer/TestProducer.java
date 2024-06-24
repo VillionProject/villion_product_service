@@ -1,4 +1,4 @@
-package com.example.villion_product_service.kafka;
+package com.example.villion_product_service.kafka.producer;
 
 
 import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto2;

@@ -1,4 +1,4 @@
-package com.example.villion_product_service.kafka;
+package com.example.villion_product_service.kafka.consumer;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

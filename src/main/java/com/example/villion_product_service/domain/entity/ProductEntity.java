@@ -37,6 +37,4 @@ public class ProductEntity {
     private Boolean rentable;
     private Boolean purchasable;
 
-
-
 }

@@ -2,6 +2,7 @@ package com.example.villion_product_service.controller;
 
 import com.example.villion_product_service.client.RequestCart;
 import com.example.villion_product_service.domain.entity.BookEntity;
+import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.request.RequestAddProduct;
 import com.example.villion_product_service.service.BookService;
 import com.example.villion_product_service.service.ProductService;
@@ -32,5 +33,12 @@ public class ProductController {
 //    public void addProduct(@PathVariable Long userId, @RequestBody RequestAddProduct requestAddProduct) {
 //        productService.addProduct(userId, requestAddProduct);
 //    }
+
+
+    // 상품 조회
+    @GetMapping("getProductsByLocation/{userId}")
+    public List<ProductEntity> getProductsByLocation(@PathVariable Long userId) {
+        return productService.getProductsByLocation(userId);
+    }
 
 }

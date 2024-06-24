@@ -1,7 +1,6 @@
-package com.example.villion_product_service.kafka;
+package com.example.villion_product_service.kafka.producer;
 
 import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto;
-import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

@@ -1,28 +1,25 @@
-package com.example.villion_product_service.kafka;
+package com.example.villion_product_service.kafka.consumer;
 
 import com.example.villion_product_service.domain.dto.AddDeliveryOrderDto;
 import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto;
-import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto2;
 import com.example.villion_product_service.domain.dto.OrderDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.RentalStatus;
+import com.example.villion_product_service.kafka.producer.TestProducer;
+import com.example.villion_product_service.kafka.config.TopicConfig;
 import com.example.villion_product_service.repository.ProductCountRepository;
 import com.example.villion_product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DeliveryOrderConsumer {
     private final ProductRepository productRepository;
-    private final addRentedDeliveryOrderProducer addRentedDeliveryOrderProducer;
+    private final com.example.villion_product_service.kafka.producer.addRentedDeliveryOrderProducer addRentedDeliveryOrderProducer;
     private final TestProducer testProducer;
     private final ProductCountRepository productCountRepository;
 
