@@ -41,4 +41,10 @@ public class ProductController {
         return productService.getProductsByLocation();
     }
 
+    // TODO 제품 상세 보기
+    @GetMapping("/getProductDetail/{productId}")
+    public ProductEntity getProductDetail(@PathVariable Long productId) {
+        return productService.getProductDetail(productId);
+    }
+
 }

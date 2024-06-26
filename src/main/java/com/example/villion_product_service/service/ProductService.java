@@ -1,16 +1,9 @@
 package com.example.villion_product_service.service;
 
-import com.example.villion_product_service.domain.entity.BookEntity;
 import com.example.villion_product_service.domain.entity.ProductEntity;
-import com.example.villion_product_service.domain.response.ResponseAddProduct;
-import com.example.villion_product_service.domain.request.RequestAddProduct;
 import com.example.villion_product_service.kafka.consumer.GetProductsByLocationConsumer;
-import com.example.villion_product_service.repository.BookRepository;
 import com.example.villion_product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,4 +66,8 @@ public class ProductService {
     }
 
 
+    public ProductEntity getProductDetail(Long productId) {
+
+        return productRepository.findByProductId(productId);
+    }
 }
