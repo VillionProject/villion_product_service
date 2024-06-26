@@ -73,17 +73,11 @@ public class ProductService {
 
 
         }
-
-//        ModelMapper mapper = new ModelMapper();
-//        GetLibraryWithProductDto map = mapper.map(byProductId, GetLibraryWithProductDto.class);
-//
-//        // TODO userId검색해서 user정보(도서관이름)를 보여줘야함..
-//        String libraryWithProduct = userServiceClient.getLibraryWithProduct(byProductId.getOwnerUserId());
-//
-//        map.setLibraryName(libraryWithProduct);
-//
-
         return libraryWithProductDtos;
     }
 
+    public List<ProductEntity> getProductsByCategory(Long productId) {
+        ProductEntity byProductId = productRepository.findByProductId(productId);
+     return productRepository.findAllByCategory(byProductId.getCategory());
+    }
 }
