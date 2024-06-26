@@ -14,4 +14,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> findAllByRentalLocationAndRentalStatusNot(String rentalLocation, RentalStatus status);
     List<ProductEntity> findAllByRentalStatusNot(RentalStatus status);
 
+    List<ProductEntity> findAllByBookNameAndProductIdNot(String bookName, Long productId);
 }

@@ -1,12 +1,16 @@
 package com.example.villion_product_service.service;
 
+import com.example.villion_product_service.client.UserServiceClient;
+import com.example.villion_product_service.domain.dto.GetLibraryWithProductDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.RentalStatus;
 import com.example.villion_product_service.kafka.consumer.GetProductsByLocationConsumer;
 import com.example.villion_product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,6 +18,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final GetProductsByLocationConsumer getProductsByLocationConsumer;
+    private final UserServiceClient userServiceClient;
 
     public List<ProductEntity> getProductsByLocation() {
 //        getProductsByLocationConsumer.getProductsByLocation();
@@ -48,4 +53,37 @@ public class ProductService {
 
         return productRepository.findByProductId(productId);
     }
+
+    public List<GetLibraryWithProductDto> getLibraryWithProduct(Long productId) {
+        ProductEntity byProductId = productRepository.findByProductId(productId);
+
+
+        List<ProductEntity> allByBookNameAndProductIdNot = productRepository.findAllByBookNameAndProductIdNot(byProductId.getBookName(), productId);
+
+        List<GetLibraryWithProductDto> libraryWithProductDtos = new ArrayList<>();
+        for(ProductEntity product : allByBookNameAndProductIdNot) {
+            Long ownerUserId = product.getOwnerUserId();
+            String libraryWithProduct = userServiceClient.getLibraryWithProduct(ownerUserId);
+
+            ModelMapper mapper = new ModelMapper();
+            GetLibraryWithProductDto map = mapper.map(byProductId, GetLibraryWithProductDto.class);
+            map.setLibraryName(libraryWithProduct);
+
+            libraryWithProductDtos.add(map);
+
+
+        }
+
+//        ModelMapper mapper = new ModelMapper();
+//        GetLibraryWithProductDto map = mapper.map(byProductId, GetLibraryWithProductDto.class);
+//
+//        // TODO userId검색해서 user정보(도서관이름)를 보여줘야함..
+//        String libraryWithProduct = userServiceClient.getLibraryWithProduct(byProductId.getOwnerUserId());
+//
+//        map.setLibraryName(libraryWithProduct);
+//
+
+        return libraryWithProductDtos;
+    }
+
 }

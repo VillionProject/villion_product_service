@@ -1,5 +1,6 @@
 package com.example.villion_product_service.controller;
 
+import com.example.villion_product_service.domain.dto.GetLibraryWithProductDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.service.BookService;
 import com.example.villion_product_service.service.ProductService;
@@ -48,7 +49,10 @@ public class ProductController {
     }
 
 
-    // TODO 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
-
+    // 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
+    @GetMapping("/getLibraryWithProduct/{productId}")
+    public List<GetLibraryWithProductDto> getLibraryWithProduct(@PathVariable Long productId) {
+        return productService.getLibraryWithProduct(productId);
+    }
 
 }
