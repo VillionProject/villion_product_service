@@ -1,6 +1,7 @@
 package com.example.villion_product_service.repository;
 
 import com.example.villion_product_service.domain.entity.ProductEntity;
+import com.example.villion_product_service.domain.eunm.RentalStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     ProductEntity findByProductId(Long productId);
 
-    List<ProductEntity> findAllByRentalLocation(String location);
+    List<ProductEntity> findAllByRentalLocationAndRentalStatusNot(String rentalLocation, RentalStatus status);
+    List<ProductEntity> findAllByRentalStatusNot(RentalStatus status);
 
 }

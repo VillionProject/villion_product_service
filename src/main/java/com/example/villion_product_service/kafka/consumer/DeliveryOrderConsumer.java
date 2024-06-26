@@ -25,10 +25,6 @@ public class DeliveryOrderConsumer {
 
     @KafkaListener(topics = TopicConfig.addDeliveryOrder)
     public void addDeliveryOrderResult(AddDeliveryOrderDto addDeliveryOrderDto) {
-        // TODO rental-service에서 빌려진 내역을 어떻게 보여줄 것인지 고민이 필요함.. 제품별로 보여줄 것인지? 아니연 하나 주문내역을 보여줄 것인지?
-        // 후자가 좋아보이긴 함.. 고민 필요
-
-
 
         for (OrderDto orderDto : addDeliveryOrderDto.getOrderList()) {
 
@@ -54,7 +50,7 @@ public class DeliveryOrderConsumer {
 
                 // 재고량이 0이면 UNAVAILABLE, 남아있으면 AVAILABLE, 하지만 rental-service 넘어가는건 RENTED
                 if(resultStock == 0) {
-                    byProductId.setRentalStatus(RentalStatus.UNAVAILABLE); // 대여완료로 변경
+                    byProductId.setRentalStatus(RentalStatus.UNAVAILABLE);
                 } else {
                     byProductId.setRentalStatus(RentalStatus.AVAILABLE);
                 }

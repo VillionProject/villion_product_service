@@ -41,10 +41,14 @@ public class ProductController {
         return productService.getProductsByLocation();
     }
 
-    // TODO 제품 상세 보기
+    // 제품 상세 보기
     @GetMapping("/getProductDetail/{productId}")
     public ProductEntity getProductDetail(@PathVariable Long productId) {
         return productService.getProductDetail(productId);
     }
+
+
+    // TODO 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
+
 
 }
