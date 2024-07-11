@@ -18,6 +18,7 @@ public class ProductEntity {
     private Long productId;
 
     private Long ownerUserId;
+    private String LibraryName;
 
     private String bookName;
     @Enumerated(EnumType.STRING)
