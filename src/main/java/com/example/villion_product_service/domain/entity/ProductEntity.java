@@ -18,7 +18,6 @@ public class ProductEntity {
     private Long productId;
 
     private Long ownerUserId;
-    private String LibraryName;
 
     private String bookName;
     @Enumerated(EnumType.STRING)
@@ -32,10 +31,11 @@ public class ProductEntity {
     private Long rentalPrice;
     @Enumerated(EnumType.STRING)
     private RentalMethod rentalMethod; // enum
-    private boolean popularity; // 인기제품이다 아니다.
     private String rentalLocation;
     private String description;
     private Boolean rentable;
     private Boolean purchasable;
+
+    private String productImg;
 
 }

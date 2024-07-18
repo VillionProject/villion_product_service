@@ -19,6 +19,8 @@ public class GetProductsByLocationConsumer {
 
     @KafkaListener(topics = TopicConfig.getProductsByLocation)
     public void getProductsByLocation(String location) {
+
+
         this.location = location;
     }
 

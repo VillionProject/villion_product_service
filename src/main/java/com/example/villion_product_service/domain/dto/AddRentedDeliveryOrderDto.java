@@ -52,6 +52,5 @@ public class AddRentedDeliveryOrderDto {
     private Long rentalPrice;
     @Enumerated(EnumType.STRING)
     private RentalMethod rentalMethod; // enum
-//    private boolean popularity; // 인기제품이다 아니다.
     private String rentalLocation;
 }

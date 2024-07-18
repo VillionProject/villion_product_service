@@ -2,6 +2,7 @@ package com.example.villion_product_service.kafka.consumer;
 
 import com.example.villion_product_service.domain.dto.ProductDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
+import com.example.villion_product_service.domain.eunm.RentalStatus;
 import com.example.villion_product_service.kafka.config.TopicConfig;
 import com.example.villion_product_service.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,7 @@ public class KafkaConsumer {
         System.out.println(productDto);
         ModelMapper mapper = new ModelMapper();
         ProductEntity productEntity = mapper.map(productDto, ProductEntity.class);
+        productEntity.setRentalStatus(RentalStatus.AVAILABLE);
         productRepository.save(productEntity);
     }
 
