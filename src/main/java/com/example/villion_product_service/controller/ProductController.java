@@ -36,7 +36,7 @@ public class ProductController {
 //    }
 
 
-    // 상품 조회
+    // 위치별 상품 조회
     @GetMapping("/getProductsByLocation")
     public List<ProductEntity> getProductsByLocation() {
         return productService.getProductsByLocation();

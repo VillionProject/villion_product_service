@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class addRentedDeliveryOrderProducer {
+public class AddRentedDeliveryOrderProducer {
 
     private final KafkaTemplate<String, AddRentedDeliveryOrderDto> kafkaTemplate;
 
-    public addRentedDeliveryOrderProducer(KafkaTemplate<String, AddRentedDeliveryOrderDto> kafkaTemplate) {
+    public AddRentedDeliveryOrderProducer(KafkaTemplate<String, AddRentedDeliveryOrderDto> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 

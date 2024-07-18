@@ -5,7 +5,7 @@ import com.example.villion_product_service.domain.dto.AddRentedDeliveryOrderDto;
 import com.example.villion_product_service.domain.dto.OrderDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.RentalStatus;
-import com.example.villion_product_service.kafka.producer.TestProducer;
+import com.example.villion_product_service.kafka.producer.AddRentedDeliveryOrderProducer;
 import com.example.villion_product_service.kafka.config.TopicConfig;
 import com.example.villion_product_service.repository.ProductCountRepository;
 import com.example.villion_product_service.repository.ProductRepository;
@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DeliveryOrderConsumer {
     private final ProductRepository productRepository;
-    private final com.example.villion_product_service.kafka.producer.addRentedDeliveryOrderProducer addRentedDeliveryOrderProducer;
-    private final TestProducer testProducer;
+    private final AddRentedDeliveryOrderProducer addRentedDeliveryOrderProducer;
     private final ProductCountRepository productCountRepository;
 
     @KafkaListener(topics = TopicConfig.addDeliveryOrder)
@@ -43,6 +42,7 @@ public class DeliveryOrderConsumer {
             Long orderCount = productCountRepository.increment(String.valueOf(productId), orderedQuantity);
 
             // orderCount가 몇까지 증가했는지 확인
+            // 주문량(orderCount)이 재고(currentStock)를 초과하지 않았을 경우
             if (orderCount != null && orderCount <= currentStock && currentStock != 0) {
                 // 재고량 업데이트
                 // 등록된 상품 재고량도 주문량만큼 -되고 "저장"이되어야 함..
@@ -54,17 +54,10 @@ public class DeliveryOrderConsumer {
                 } else {
                     byProductId.setRentalStatus(RentalStatus.AVAILABLE);
                 }
+
                 productRepository.save(byProductId);
 
-                // 총 주문 수량 누적
-//                long totalQuantity = 0L; // 초기화
-//                totalQuantity += orderedQuantity; // 누적 수량
-//
-//                // 총 금액  = 주문 수량 * 가격
-//                long totalPrice = 0L; // 초기화
-//                totalPrice += orderedQuantity * byProductId.getRentalPrice();
-
-
+                // RentalStatus.RENTED일 경우
                 // rental-service : 대여원장으로 넘겨줌
                 AddRentedDeliveryOrderDto build = AddRentedDeliveryOrderDto.builder()
                         .productId(byProductId.getProductId())
@@ -73,9 +66,6 @@ public class DeliveryOrderConsumer {
                         .renterUserId(addDeliveryOrderDto.getRenterUserId())
                         .rentalStartDate(addDeliveryOrderDto.getRentalStartDate())
                         .rentalEndDate(addDeliveryOrderDto.getRentalEndDate())
-//                        .totalRentalQuantity(totalQuantity)
-//                        .totalRentalPrice(totalPrice-addDeliveryOrderDto.getUsedPoints() + addDeliveryOrderDto.getShippingCost())
-//                        .orderList(addDeliveryOrderDto.getOrderList())
                         .paymentMethod(addDeliveryOrderDto.getPaymentMethod())
 
                         .bookName(byProductId.getBookName())
@@ -86,16 +76,13 @@ public class DeliveryOrderConsumer {
                         .rentalPrice(byProductId.getRentalPrice())
                         .rentalMethod(byProductId.getRentalMethod())
                         .rentalLocation(byProductId.getRentalLocation())
-
                         .build();
 
                 addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, build);
-//            addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, map);
 
-            } else {
+            } else { // 주문량(orderCount)이 재고(currentStock)를 초과했을 경우
                 log.error("Ordered quantity exceeds available stock for productId: " + productId);
             }
         }
-
     }
 }

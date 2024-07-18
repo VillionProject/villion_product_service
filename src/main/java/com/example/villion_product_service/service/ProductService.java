@@ -24,6 +24,8 @@ public class ProductService {
 //        getProductsByLocationConsumer.getProductsByLocation();
 
 
+        // #1 user-service에서 kafka로 user의 위치 가져오기(kafka:비동기적이고 실시간으로 변경되는 이벤트 기반 데이터 처리에 적합:위치)
+        // -> userID를 브라우저에서 가져올 수 없나? -> 안돼. 왜냐면 user의 위치가 필요한거라서
         String location = getProductsByLocationConsumer.getLocation();
 //        String location = "인계동";
 
@@ -31,11 +33,11 @@ public class ProductService {
             throw new IllegalStateException("Location not set. Ensure the location is received from Kafka first.");
         }
 
+        // 대여 상태가 UNAVAILABLE인 것은 제외하고 제품 전체 보여주기
         List<ProductEntity> allByRentalLocation = productRepository.findAllByRentalLocationAndRentalStatusNot(location, RentalStatus.UNAVAILABLE);
 
 
-        // #1 user-service에서 kafka로 user의 위치를 가져와야함..(kafka:비동기적이고 실시간으로 변경되는 이벤트 기반 데이터 처리에 적합:위치)
-        // -> userID를 브라우저에서 가져올 수 없나? -> 안돼. 왜냐면 user의 위치가 필요한거라서
+
 
         if (location.equals("지역 미지정")) { // #2 지정 미지정일 경우, 전체보기
             // 빌릴 수 있는 상품 "전체" 보여주기(Feign Client 사용)
@@ -70,8 +72,6 @@ public class ProductService {
             map.setLibraryName(libraryWithProduct);
 
             libraryWithProductDtos.add(map);
-
-
         }
         return libraryWithProductDtos;
     }
