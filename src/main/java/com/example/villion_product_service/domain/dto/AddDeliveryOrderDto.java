@@ -1,10 +1,9 @@
 package com.example.villion_product_service.domain.dto;
 
-import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.domain.eunm.PaymentMethod;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.villion_product_service.domain.eunm.RentalMethod;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -24,11 +23,13 @@ public class AddDeliveryOrderDto {
     private String deliveryMemo;
     private LocalDate rentalStartDate; //  대여시작일
     private LocalDate rentalEndDate; // 대여마감일
-//    private Long totalRentalQuantity;
     private Long shippingCost;
-//    private Long totalRentalPrice;
     private Long usedPoints;
-    private List<OrderDto> orderList; // 주문 내역은 화면에서 받아서 보여주기
+
+    @Enumerated(EnumType.STRING)
+    private RentalMethod rentalMethod; // enum
+
+    private List<RentalProducts> orderList; // 주문 내역은 화면에서 받아서 보여주기
 
 
     // 결제 내역 정보

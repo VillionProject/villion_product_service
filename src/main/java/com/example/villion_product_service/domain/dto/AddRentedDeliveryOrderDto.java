@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,42 +16,36 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddRentedDeliveryOrderDto {
-    private Long Id;
+//    private Long Id;
 
     private Long ownerUserId; // 책주인(대여받는 사람)(defalt)
     private Long renterUserId; // 대여하는 사람
 
-    // 배송 내역 정보
+    //    #제품
     private Long productId;
-//    private String userName;
-//    private Long phoneNumber;
-//    private String address;
-//    private String deliveryMemo;
-    private LocalDate rentalStartDate; //  대여 시작일
-    private LocalDate rentalEndDate; // 대여 종료일
+    private LocalDate rentalStartDate; // 대여 시작일
+    private LocalDate rentalEndDate;   // 대여 종료일
     private Long totalRentalQuantity;
-//    private Long shippingCost;
     private Long totalRentalPrice;
-//    private Long usedPoints;
-    private List<OrderDto> orderList; // 주문 내역은 화면에서 받아서 보여주기
-
 
     // 결제 내역 정보
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+    private Long usedPoints;
+    private Long shippingCost;
 
+    // 주문 정보
+    private String userName;
+    private Long phoneNumber;
+    private String address;
+    private String deliveryMemo;
 
-    // 도서 정보
-    private String bookName;
-    @Enumerated(EnumType.STRING)
-    private Category category; // enum
-    @Enumerated(EnumType.STRING)
-    private ProductStatus productStatus; // enum
     @Enumerated(EnumType.STRING)
     private RentalStatus rentalStatus; // 대여 상태
-    private Long rentalQuantity;
-    //    private LocalDate rentalPeriod; // 대여 가능 기간
-    private Long rentalPrice;
     @Enumerated(EnumType.STRING)
     private RentalMethod rentalMethod; // enum
-    private String rentalLocation;
+//    private LocalDateTime orderedAt; // 주문일
+
+    // 주문 목록
+    private List<RentalProducts> rentalProducts;
 }

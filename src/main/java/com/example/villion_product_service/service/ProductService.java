@@ -68,7 +68,7 @@ public class ProductService {
             String libraryWithProduct = userServiceClient.getLibraryWithProduct(ownerUserId);
 
             ModelMapper mapper = new ModelMapper();
-            GetLibraryWithProductDto map = mapper.map(byProductId, GetLibraryWithProductDto.class);
+            GetLibraryWithProductDto map = mapper.map(product, GetLibraryWithProductDto.class);
             map.setLibraryName(libraryWithProduct);
 
             libraryWithProductDtos.add(map);
@@ -79,5 +79,9 @@ public class ProductService {
     public List<ProductEntity> getProductsByCategory(Long productId) {
         ProductEntity byProductId = productRepository.findByProductId(productId);
      return productRepository.findAllByCategory(byProductId.getCategory());
+    }
+
+    public List<ProductEntity> searchProduct(String word) {
+        return productRepository.searchByFullText(word);
     }
 }

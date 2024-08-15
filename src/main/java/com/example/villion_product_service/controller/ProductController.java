@@ -5,10 +5,8 @@ import com.example.villion_product_service.domain.entity.ProductEntity;
 import com.example.villion_product_service.service.BookService;
 import com.example.villion_product_service.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,6 +40,7 @@ public class ProductController {
         return productService.getProductsByLocation();
     }
 
+
     // 제품 상세 보기
     @GetMapping("/getProductDetail/{productId}")
     public ProductEntity getProductDetail(@PathVariable Long productId) {
@@ -60,4 +59,15 @@ public class ProductController {
     public List<ProductEntity> getProductsByCategory(@PathVariable Long productId) {
         return productService.getProductsByCategory(productId);
     }
+
+    // 제품 상제 보기 - 이 책과 함께 주문한 도서
+    // 거래 완료된 내역에서 같이 주문된 것 가져오기
+
+    // 도서 검색
+    @GetMapping("/searchProduct/{word}")
+    public List<ProductEntity> searchProduct(@PathVariable String word) {
+        return productService.searchProduct(word);
+
+    }
+
 }
