@@ -1,10 +1,18 @@
 package com.example.villion_product_service.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+
+
 @Entity
 @Table(name = "books")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookEntity {
 
     @Id
