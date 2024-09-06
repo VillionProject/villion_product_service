@@ -3,6 +3,7 @@ package com.example.villion_product_service.service;
 import com.example.villion_product_service.client.UserServiceClient;
 import com.example.villion_product_service.domain.dto.GetLibraryWithProductDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
+import com.example.villion_product_service.domain.eunm.Category;
 import com.example.villion_product_service.domain.eunm.RentalStatus;
 import com.example.villion_product_service.kafka.consumer.GetProductsByLocationConsumer;
 import com.example.villion_product_service.repository.ProductRepository;
@@ -84,4 +85,13 @@ public class ProductService {
     public List<ProductEntity> searchProduct(String word) {
         return productRepository.searchByFullText(word);
     }
+
+    public List<ProductEntity> suggestedCategory(Category category) {
+       return productRepository.findAllByCategory(category);
+    }
+
+    public List<ProductEntity> getCategory(Category category) {
+        return productRepository.findAllByCategory(category);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.villion_product_service.controller;
 
 import com.example.villion_product_service.domain.dto.GetLibraryWithProductDto;
 import com.example.villion_product_service.domain.entity.ProductEntity;
+import com.example.villion_product_service.domain.eunm.Category;
 import com.example.villion_product_service.service.BookService;
 import com.example.villion_product_service.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -61,13 +62,25 @@ public class ProductController {
     }
 
     // 제품 상제 보기 - 이 책과 함께 주문한 도서
-    // 거래 완료된 내역에서 같이 주문된 것 가져오기
+    // 거래 완료된 내역에서 같이 주문된  것 가져오기
 
     // 도서 검색
     @GetMapping("/searchProduct/{word}")
     public List<ProductEntity> searchProduct(@PathVariable String word) {
         return productService.searchProduct(word);
-
     }
 
+    // 메인 - Villion이 추천하는 책 리스트
+    @GetMapping("/suggestedCategory/{category}")
+    public List<ProductEntity> suggestedCategory(@PathVariable String category) {
+        Category suggestedCategory = Category.TRAVEL;
+        return productService.suggestedCategory(suggestedCategory);
+    }
+
+
+    // 카테고리별 도서 조회(MBTI테스트에서 활용)
+    @GetMapping("/getCategory/{category}")
+    public List<ProductEntity> searchProduct(@PathVariable Category category) {
+        return productService.getCategory(category);
+    }
 }
