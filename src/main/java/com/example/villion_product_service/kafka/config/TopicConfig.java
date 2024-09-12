@@ -16,6 +16,7 @@ public class TopicConfig {
     public final static String testTopic = "testTopic";
     public final static String getProductsByLocation = "getProductsByLocation-topic";
     public final static String getLibraryWithProduct = "getLibraryWithProduct-topic";
+    public final static String updateRentalStatus = "updateRentalStatus";
 
     @Bean
     public NewTopic addProductTopic(){
@@ -84,6 +85,15 @@ public class TopicConfig {
     public NewTopic getLibraryWithProduct(){
         return TopicBuilder
                 .name(getLibraryWithProduct)
+                .replicas(1)
+                .partitions(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic updateRentalStatus(){
+        return TopicBuilder
+                .name(updateRentalStatus)
                 .replicas(1)
                 .partitions(1)
                 .build();
