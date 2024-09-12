@@ -94,4 +94,7 @@ public class ProductService {
         return productRepository.findAllByCategory(category);
     }
 
+    public ProductEntity getProduct(Long productId) {
+        return productRepository.findByProductId(productId);
+    }
 }

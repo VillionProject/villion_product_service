@@ -55,6 +55,14 @@ public class ProductController {
         return productService.getLibraryWithProduct(productId);
     }
 
+    // 도서 조회
+    @GetMapping("/getProduct/{productId}")
+    public ProductEntity getProduct(@PathVariable Long productId) {
+        return productService.getProduct(productId);
+    }
+
+
+
     // 제품 상세 보기 - 이 책과 같은 카테고리 도서 목록
     @GetMapping("/getProductsByCategory/{productId}")
     public List<ProductEntity> getProductsByCategory(@PathVariable Long productId) {

@@ -27,7 +27,11 @@ public class KafkaConsumer {
         ModelMapper mapper = new ModelMapper();
         ProductEntity productEntity = mapper.map(productDto, ProductEntity.class);
         productEntity.setRentalStatus(RentalStatus.AVAILABLE);
-        productRepository.save(productEntity);
+        try {
+            productRepository.save(productEntity);
+        } catch (Exception e) {
+            log.error("Error while saving product {}", productDto);
+        }
     }
 
 

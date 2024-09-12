@@ -60,11 +60,14 @@ public class DeliveryOrderConsumer {
                     byProductId.setRentalStatus(RentalStatus.AVAILABLE);
                 }
 
+                if(addDeliveryOrderDto.getRentalEndDate() == null) { // 대여마감일에 날짜가 null이면, 구매완료
+                    byProductId.setRentalStatus(RentalStatus.PURCHASED);
+                } else {
+                    // RENTED 상태로 설정
+                    byProductId.setRentalStatus(RentalStatus.RENTED);
+                }
 
-                // RENTED 상태로 설정
-                byProductId.setRentalStatus(RentalStatus.RENTED);
                 hasRentedStatus = true; // RENTED 상태 플래그 설정
-
                 productRepository.save(byProductId);
 
                 // 누적 가격과 수량 계산
@@ -132,7 +135,8 @@ public class DeliveryOrderConsumer {
 //                addRentedDeliveryOrderProducer.send(TopicConfig.addRentedDeliveryOrder, build);
 
             } else { // 주문량(orderCount)이 재고(currentStock)를 초과했을 경우
-                log.error("Ordered quantity exceeds available stock for productId: " + productId);
+//                log.error("Ordered quantity exceeds available stock for productId: " + productId);
+                throw new IllegalStateException("Ordered quantity exceeds available stock for productId: " + productId);
             }
         }
         // 반복문이 끝난 후, AddRentedDeliveryOrderDto 생성
